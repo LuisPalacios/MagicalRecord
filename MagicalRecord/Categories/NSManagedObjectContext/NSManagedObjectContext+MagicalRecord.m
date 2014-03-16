@@ -192,12 +192,14 @@ static NSString * const kMagicalRecordNSManagedObjectContextWorkingName = @"kNSM
     return context;    
 }
 
-+ (NSManagedObjectContext *) MR_contextWithStoreCoordinator:(NSPersistentStoreCoordinator *)coordinator;
++ (NSManagedObjectContext *) MR_contextWithStoreCoordinator:(NSPersistentStoreCoordinator *)coordinator withWorkingName:(NSString*)workingName NS_RETURNS_RETAINED
 {
 	NSManagedObjectContext *context = nil;
     if (coordinator != nil)
 	{
         context = [self MR_contextWithoutParent];
+        if ( workingName )
+            [context MR_setWorkingName:workingName];
         [context performBlockAndWait:^{
             [context setPersistentStoreCoordinator:coordinator];
         }];
@@ -205,6 +207,10 @@ static NSString * const kMagicalRecordNSManagedObjectContextWorkingName = @"kNSM
         MRLog(@"-> Created Context %@", [context MR_workingName]);
     }
     return context;
+}
++ (NSManagedObjectContext *) MR_contextWithStoreCoordinator:(NSPersistentStoreCoordinator *)coordinator;
+{
+    return [self MR_contextWithStoreCoordinator:coordinator withWorkingName:nil];
 }
 
 - (void) MR_obtainPermanentIDsBeforeSaving;
@@ -237,6 +243,7 @@ static NSString * const kMagicalRecordNSManagedObjectContextWorkingName = @"kNSM
 - (void) MR_setWorkingName:(NSString *)workingName;
 {
     [[self userInfo] setObject:workingName forKey:kMagicalRecordNSManagedObjectContextWorkingName];
+    MRLog(@"-> Set the workingName %@", [self MR_workingName]);
 }
 
 - (NSString *) MR_workingName;

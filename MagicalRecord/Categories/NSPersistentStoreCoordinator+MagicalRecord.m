@@ -62,20 +62,30 @@ NSString * const kMagicalRecordPSCDidCompleteiCloudSetupNotification = @"kMagica
     }
 }
 
+//LUISPA
 - (NSPersistentStore *) MR_addSqliteStoreNamed:(id)storeFileName withOptions:(__autoreleasing NSDictionary *)options
+{
+    //LUISPA
+    return [self MR_addSqliteStoreNamed:storeFileName withConfiguration:nil withOptions:options];
+}
+
+
+//LUISPA
+- (NSPersistentStore *) MR_addSqliteStoreNamed:(id)storeFileName withConfiguration:(NSString*)configuration withOptions:(__autoreleasing NSDictionary *)options
 {
     NSURL *url = [storeFileName isKindOfClass:[NSURL class]] ? storeFileName : [NSPersistentStore MR_urlForStoreName:storeFileName];
     NSError *error = nil;
+    MRLog(@"url: %@", url);
     
     [self MR_createPathToStoreFileIfNeccessary:url];
     
     NSPersistentStore *store = [self addPersistentStoreWithType:NSSQLiteStoreType
-                                                  configuration:nil
+                                                  configuration:configuration           //LUISPA
                                                             URL:url
                                                         options:options
                                                           error:&error];
-    
-    if (!store) 
+
+    if (!store)
     {
         if ([MagicalRecord shouldDeleteStoreOnModelMismatch])
         {
@@ -94,7 +104,7 @@ NSString * const kMagicalRecordPSCDidCompleteiCloudSetupNotification = @"kMagica
                 
                 // Try one more time to create the store
                 store = [self addPersistentStoreWithType:NSSQLiteStoreType
-                                           configuration:nil
+                                           configuration:configuration                  //LUISPA
                                                      URL:url
                                                  options:options
                                                    error:&error];
@@ -278,18 +288,27 @@ NSString * const kMagicalRecordPSCDidCompleteiCloudSetupNotification = @"kMagica
     return psc;
 }
 
-+ (NSPersistentStoreCoordinator *) MR_coordinatorWithSqliteStoreNamed:(NSString *)storeFileName withOptions:(NSDictionary *)options
+
+// LUISPA
++ (NSPersistentStoreCoordinator *) MR_coordinatorWithSqliteStoreNamed:(id)storeFileName withConfiguration:(NSString*)configuration withOptions:(NSDictionary *)options
 {
     NSManagedObjectModel *model = [NSManagedObjectModel MR_defaultManagedObjectModel];
     NSPersistentStoreCoordinator *psc = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];
     
-    [psc MR_addSqliteStoreNamed:storeFileName withOptions:options];
+    [psc MR_addSqliteStoreNamed:storeFileName withConfiguration:configuration withOptions:options];
     return psc;
 }
 
-+ (NSPersistentStoreCoordinator *) MR_coordinatorWithSqliteStoreNamed:(NSString *)storeFileName
+// LUISPA
++ (NSPersistentStoreCoordinator *) MR_coordinatorWithSqliteStoreNamed:(id)storeFileName withOptions:(NSDictionary *)options
 {
-	return [self MR_coordinatorWithSqliteStoreNamed:storeFileName withOptions:nil];
+	return [self MR_coordinatorWithSqliteStoreNamed:storeFileName withConfiguration:nil withOptions:options];
+}
+
+// LUISPA
++ (NSPersistentStoreCoordinator *) MR_coordinatorWithSqliteStoreNamed:(id)storeFileName
+{
+	return [self MR_coordinatorWithSqliteStoreNamed:storeFileName withConfiguration:nil withOptions:nil];
 }
 
 @end

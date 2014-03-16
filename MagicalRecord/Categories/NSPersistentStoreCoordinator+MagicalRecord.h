@@ -19,7 +19,9 @@ extern NSString * const kMagicalRecordPSCDidCompleteiCloudSetupNotification;
 
 + (NSPersistentStoreCoordinator *) MR_newPersistentStoreCoordinator NS_RETURNS_RETAINED;
 
-+ (NSPersistentStoreCoordinator *) MR_coordinatorWithSqliteStoreNamed:(NSString *)storeFileName;
++ (NSPersistentStoreCoordinator *) MR_coordinatorWithSqliteStoreNamed:(id)storeFileName withConfiguration:(NSString*)configuration withOptions:(NSDictionary *)options;  //LUISPA
++ (NSPersistentStoreCoordinator *) MR_coordinatorWithSqliteStoreNamed:(id)storeFileName;
+
 + (NSPersistentStoreCoordinator *) MR_coordinatorWithAutoMigratingSqliteStoreNamed:(NSString *)storeFileName;
 + (NSPersistentStoreCoordinator *) MR_coordinatorWithPersistentStore:(NSPersistentStore *)persistentStore;
 + (NSPersistentStoreCoordinator *) MR_coordinatorWithiCloudContainerID:(NSString *)containerID contentNameKey:(NSString *)contentNameKey localStoreNamed:(NSString *)localStoreName cloudStorePathComponent:(NSString *)subPathComponent;
@@ -29,6 +31,7 @@ extern NSString * const kMagicalRecordPSCDidCompleteiCloudSetupNotification;
 - (NSPersistentStore *) MR_addInMemoryStore;
 - (NSPersistentStore *) MR_addAutoMigratingSqliteStoreNamed:(NSString *) storeFileName;
 - (NSPersistentStore *) MR_addSqliteStoreNamed:(id)storeFileName withOptions:(__autoreleasing NSDictionary *)options;
+- (NSPersistentStore *) MR_addSqliteStoreNamed:(id)storeFileName withConfiguration:(NSString*)configuration withOptions:(__autoreleasing NSDictionary *)options; //LUISPA
 
 - (void) MR_addiCloudContainerID:(NSString *)containerID contentNameKey:(NSString *)contentNameKey localStoreNamed:(NSString *)localStoreName cloudStorePathComponent:(NSString *)subPathComponent;
 - (void) MR_addiCloudContainerID:(NSString *)containerID contentNameKey:(NSString *)contentNameKey localStoreNamed:(NSString *)localStoreName cloudStorePathComponent:(NSString *)subPathComponent completion:(void(^)(void))completionBlock;

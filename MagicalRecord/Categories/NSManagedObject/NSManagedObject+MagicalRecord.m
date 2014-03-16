@@ -76,13 +76,39 @@ static NSUInteger defaultBatchSize = kMagicalRecordDefaultBatchSize;
 
 #endif
 
+// LUISPA: CREADO POR LUIS PARA SOPORTAR ENTITIES CON NOMBRE DIFERENTE AL CLASS DEL ENTITY
++ (NSString *) MR_entityName
+{
+    NSString *name=nil;
+    NSString *myName = NSStringFromClass(self);
+    NSManagedObjectModel *model = [NSManagedObjectModel MR_defaultManagedObjectModel]; //[(AppDelegate *)[UIApplication delegate] managedObjectModel];
+    for (NSEntityDescription *description in model.entities) {
+        if ([description.managedObjectClassName isEqualToString:myName]) {
+            name = description.name;
+            break;
+        }
+    }
+    if ( !name)
+        [NSException raise:NSInvalidArgumentException
+                    format:@"no entity found that uses %@ as its class", myName];
+    
+    return name;
+}
+
 + (NSString *) MR_bestGuessAtAnEntityName
 {
+    NSString *entity = nil;
     if ([self respondsToSelector:@selector(entityName)])
     {
-        return [self performSelector:@selector(entityName)];
+        entity = [self performSelector:@selector(entityName)];
     }
-    return NSStringFromClass(self);
+    if ( !entity ) {
+        // ORIGINAL:
+        // return NSStringFromClass(self);
+        entity = [self MR_entityName];
+    }
+    //MRLog(@"->>>>>>>>>>>>>>>>> Entity: %@", entity);
+    return [self MR_entityName];
 }
 
 + (NSEntityDescription *) MR_entityDescriptionInContext:(NSManagedObjectContext *)context

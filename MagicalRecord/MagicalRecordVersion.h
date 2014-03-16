@@ -1,5 +1,5 @@
 // Do not edit
 #define MAGICAL_RECORD_DISPLAY_VERSION @"2.2develop"
-#define MAGICAL_RECORD_VERSION 595
-#define MAGICAL_RECORD_BUILD @"1a09221"
-// Updated on Wed Jan 1 12:39:31 EST 2014
+#define MAGICAL_RECORD_VERSION 610
+#define MAGICAL_RECORD_BUILD @"98ec121"
+// Updated on Sun Mar 16 11:48:45 CET 2014
