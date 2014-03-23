@@ -123,19 +123,25 @@ NSString * const kMagicalRecordPSCDidCompleteiCloudSetupNotification = @"kMagica
 
 #pragma mark - Public Instance Methods
 
-- (NSPersistentStore *) MR_addInMemoryStore
+// LUISPA
+- (NSPersistentStore *) MR_addInMemoryStoreWithConfiguration:(NSString*)configuration withOptions:(NSDictionary *)options
 {
     NSError *error = nil;
     NSPersistentStore *store = [self addPersistentStoreWithType:NSInMemoryStoreType
-                                                  configuration:nil 
+                                                  configuration:configuration
                                                             URL:nil
-                                                        options:nil
+                                                        options:options
                                                           error:&error];
     if (!store)
     {
         [MagicalRecord handleErrors:error];
     }
     return store;
+}
+// LUISPA
+- (NSPersistentStore *) MR_addInMemoryStore
+{
+    return [self MR_addInMemoryStoreWithConfiguration:nil withOptions:nil];
 }
 
 + (NSDictionary *) MR_autoMigrationOptions;
@@ -178,14 +184,28 @@ NSString * const kMagicalRecordPSCDidCompleteiCloudSetupNotification = @"kMagica
     return coordinator;
 }
 
-+ (NSPersistentStoreCoordinator *) MR_coordinatorWithInMemoryStore
+// LUISPA
++ (NSPersistentStoreCoordinator *) MR_coordinatorWithInMemoryStoreWithConfiguration:(NSString*)configuration withOptions:(NSDictionary *)options
 {
+    NSLog(@"ESTOY AQUI!!!");
 	NSManagedObjectModel *model = [NSManagedObjectModel MR_defaultManagedObjectModel];
 	NSPersistentStoreCoordinator *coordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];
-
-    [coordinator MR_addInMemoryStore];
-
+    
+    [coordinator MR_addInMemoryStoreWithConfiguration:configuration withOptions:options];
+    
     return coordinator;
+}
+
+// LUISPA
++ (NSPersistentStoreCoordinator *) MR_coordinatorWithInMemoryStore
+{
+    return [self MR_coordinatorWithInMemoryStoreWithConfiguration:nil withOptions:nil];
+//	NSManagedObjectModel *model = [NSManagedObjectModel MR_defaultManagedObjectModel];
+//	NSPersistentStoreCoordinator *coordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];
+//
+//    [coordinator MR_addInMemoryStore];
+//
+//    return coordinator;
 }
 
 + (NSPersistentStoreCoordinator *) MR_newPersistentStoreCoordinator
